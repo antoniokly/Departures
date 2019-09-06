@@ -17,12 +17,13 @@ async function fetcher(filters) {
       console.log(json)
   
     if (json.statusCode === 200) {
-      cacheData = json;
-      cacheFilters = filters;
-      return cacheData;
-    } else {
-      return null
-    }
+      if (json.result && json.result.transportation && json.result.transportation.modes) {
+        cacheData = json.result.transportation.modes;;
+        cacheFilters = filters;
+        return cacheData;
+      }
+    } 
+    return null;
   } catch (err) {
     console.log(err);
     return err
