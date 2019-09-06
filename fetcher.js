@@ -1,7 +1,8 @@
 import "isomorphic-fetch";
-import {transportationURL, apiKey} from './constants.js'
+import {transportationURL, apiKey, ttl} from './constants.js'
+import filter from "./filter"
 
-var cacheFilters, cacheData
+var cacheFilters, cacheData;
 
 async function fetcher(filters) {
   try {
@@ -13,9 +14,7 @@ async function fetcher(filters) {
       });
   
     let json = await response.json();
-  
-      console.log(json)
-  
+    
     if (json.statusCode === 200) {
       if (json.result && json.result.transportation && json.result.transportation.modes) {
         cacheData = json.result.transportation.modes;;
