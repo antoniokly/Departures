@@ -10,10 +10,14 @@ describe("Smoke test", () => {
   const fetcher = new Fetcher(transportationURL, transportationAPIKey, cache)
 
   test("it should return some data from the API", async () => {
-    const data = await fetcher.getData();
+    const filters = {
+      typeId: 0,
+      departureTimeMin: '2024-01-04T15:35:00.000Z',
+      departureTimeMax: '2024-10-04T15:35:00.000Z'
+    }
+    const data = await fetcher.getData(filters);
 
     expect(data.transportation).toBeDefined();
-
   });
 });
 

@@ -15,10 +15,13 @@
     "expo": "^34.0.1",
     "isomorphic-fetch": "^2.2.1",
     "jest": "24.1.0",
+    "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
+    "react-native-modal-datetime-picker": "^7.5.0",
+    "react-native-segmented-control-tab": "^3.4.1",
     "react-native-web": "^0.11.4"
   },
   "devDependencies": {

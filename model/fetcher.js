@@ -20,13 +20,23 @@ Fetcher.prototype.getData = async function(filters) {
     return cacheData.data;
   }
 
+  var urlString = this.url;
+
+  if (filters) {
+    urlString += '?'
+    urlString += Object.keys(filters).map(key => `${key}=${filters[key]}`).join('&');
+  }
+
+  console.log(encodeURI(urlString));
+
   try {
-    const response = await fetch(this.url, {
+    
+    const response = await fetch(encodeURI(urlString), {
       method: 'GET',
       headers: {
         'x-api-key': this.apiKey
-        }
-      });
+      }
+    });
   
     let json = await response.json();
     
