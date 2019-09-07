@@ -8,17 +8,18 @@ import Modal from "react-native-modal";
 import Cache from './model/cache';
 import DataSource from './model/dataSource';
 
-const {transportationURL, transportationAPIKey, defaultTtl} = require('./model/constants');
 const moment = require('moment');
 const fetch = require('node-fetch');
+const {transportationURL, transportationAPIKey, defaultTtl} = require('./model/constants');
+const {filterModes} = require('./model/filter')
 const cache = new Cache(defaultTtl);
 const dataSource = new DataSource(transportationURL, transportationAPIKey, cache, fetch);
 
-
-async function getData(filters, callback) {
+async function getModes(filters, callback) {
   try {
     const data = await dataSource.getData(filters);
-    callback(data);
+    const modes = data.transportation.modes
+    callback(filterModes(modes, filters));
   } catch (err) {
     callback(null, err);
   }
@@ -91,14 +92,14 @@ export default class App extends Component {
 
     var app = this;
 
-    getData(filters, function(data, err) {
+    getModes(filters, function(modes, err) {
       app.setState({isLoading: false})
-      if (data) {
-        console.log(data);
+      if (modes) {
+        console.log(modes);
                 
         app.setState({
           modalVisible: true,
-          modes: data.transportation.modes
+          modes: modes
         });
         // alert(JSON.stringify(markers));
 

@@ -17,6 +17,8 @@ describe("Smoke test", () => {
     }
     const data = await dataSource.getData(filters);
 
+    console.log(data);
+
     expect(data.transportation).toBeDefined();
   });
 });
