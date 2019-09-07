@@ -1,36 +1,51 @@
 import "isomorphic-fetch";
-const {transportationURL, apiKey} = require('./constants');
-const {getCacheData, setCacheData, resetCache} = require('./cache');
 
+class Fetcher {
+  constructor(url, apiKey, cache) {
+      this.url = url;
+      this.apiKey = apiKey;
+      this.cache = cache;
+  }
+} 
 
-async function fetcher(filters) {
+Fetcher.prototype.getData = async function(filters) {
 
-  var cacheData = getCacheData(filters);
+  var cacheData;
+
+  if (this.cache) {
+    cacheData = this.cache.getCacheData(filters);
+  }
  
   if (cacheData) {
-    return cacheData;
+    return cacheData.data;
   }
 
   try {
-    const response = await fetch(transportationURL, {
+    const response = await fetch(this.url, {
       method: 'GET',
       headers: {
-        'x-api-key': apiKey
+        'x-api-key': this.apiKey
         }
       });
   
     let json = await response.json();
     
     if (json.statusCode === 200) {
-      if (json.result && json.result.transportation && json.result.transportation.modes) {
-        cacheData = setCacheData(json.result.transportation.modes, filters);
-        return cacheData;
+      const data = json.result
+      if (data) {
+        if (this.cache.setCacheData(data, filters)) {
+          return data;
+        }
       }
     } 
+
     return null;
+
   } catch (err) {
     console.log(err);
-    return err
+    throw err;
+    //TODO: error handling
   }  
 }
-module.exports = fetcher;
+
+module.exports = Fetcher
