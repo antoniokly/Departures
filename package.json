@@ -21,14 +21,16 @@
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
     "react-native-elements": "^1.2.0",
+    "react-native-maps": "^0.25.0",
+    "react-native-modal": "^11.3.1",
     "react-native-modal-datetime-picker": "^7.5.0",
     "react-native-segmented-control-tab": "^3.4.1",
-    "react-native-web": "^0.11.4"
+    "react-native-vector-icons": "^6.6.0"
   },
   "devDependencies": {
     "babel-preset-expo": "^6.0.0",
-    "fetch-mock": "^7.3.9",
     "jest-expo": "^34.0.1",
+    "jest-fetch-mock": "^2.1.2",
     "mockdate": "^2.0.5",
     "react-test-renderer": "^16.9.0"
   },

@@ -1,13 +1,13 @@
-import Fetcher from '../model/fetcher'
+import DataSource from '../model/dataSource'
 import Cache from '../model/cache'
-import FetchMock from 'fetch-mock'
 import MockDate from 'mockdate'
 
 const {transportationURL, transportationAPIKey, defaultTtl} = require('../model/constants');
 
 describe("Smoke test", () => {
+  const fetch = require('node-fetch');
   const cache = new Cache(defaultTtl);
-  const fetcher = new Fetcher(transportationURL, transportationAPIKey, cache)
+  const dataSource = new DataSource(transportationURL, transportationAPIKey, cache, fetch)
 
   test("it should return some data from the API", async () => {
     const filters = {
@@ -15,40 +15,43 @@ describe("Smoke test", () => {
       departureTimeMin: '2024-01-04T15:35:00.000Z',
       departureTimeMax: '2024-10-04T15:35:00.000Z'
     }
-    const data = await fetcher.getData(filters);
+    const data = await dataSource.getData(filters);
 
     expect(data.transportation).toBeDefined();
   });
 });
 
 describe("Mock test", () => {
+  const fetch = require('jest-fetch-mock');
+  jest.setMock('node-fetch', fetch);
+
   const cache = new Cache(defaultTtl);
-  const fetcher = new Fetcher(transportationURL, transportationAPIKey, cache)
+  const dataSource = new DataSource(transportationURL, transportationAPIKey, cache, fetch)
   
+
   test("it should fetch data from API with cache", async () => {
     var data;
-    const mock = FetchMock.get(transportationURL, {statusCode: 200, result: {data: "something"}});
-    expect(mock.calls(transportationURL).length).toBe(0);
 
-    data = await fetcher.getData();
+    fetch.mockResponse(JSON.stringify({statusCode: 200, result: {data: "something"}}));
+
+    expect(fetch.mock.calls.length).toBe(0);
+
+    data = await dataSource.getData();
     expect(data).toEqual({data: "something"});
-    expect(mock.calls(transportationURL).length).toBe(1);
+    expect(fetch.mock.calls.length).toBe(1);
 
-    data = await fetcher.getData();
-    data = await fetcher.getData();
-    data = await fetcher.getData();
+    data = await dataSource.getData();
+    data = await dataSource.getData();
+    data = await dataSource.getData();
     expect(data).toEqual({data: "something"});
-    expect(mock.calls(transportationURL).length).toBe(1);
-
+    expect(fetch.mock.calls.length).toBe(1);
 
     MockDate.set('2030-09-07T04:22:41.037Z')
 
-    data = await fetcher.getData();
+    data = await dataSource.getData();
     expect(data).toEqual({data: "something"});
-    expect(mock.calls(transportationURL).length).toBe(2);
+    expect(fetch.mock.calls.length).toBe(2);
     
-    FetchMock.reset();
-    MockDate.reset();
   });
 
 });

@@ -1,14 +1,13 @@
-import "isomorphic-fetch";
-
-class Fetcher {
-  constructor(url, apiKey, cache) {
+class DataSource {
+  constructor(url, apiKey, cache, fetch) {
       this.url = url;
       this.apiKey = apiKey;
       this.cache = cache;
+      this.fetch = fetch;
   }
 } 
 
-Fetcher.prototype.getData = async function(filters) {
+DataSource.prototype.getData = async function(filters) {
 
   var cacheData;
 
@@ -31,7 +30,7 @@ Fetcher.prototype.getData = async function(filters) {
 
   try {
     
-    const response = await fetch(encodeURI(urlString), {
+    const response = await this.fetch(encodeURI(urlString), {
       method: 'GET',
       headers: {
         'x-api-key': this.apiKey
@@ -58,4 +57,4 @@ Fetcher.prototype.getData = async function(filters) {
   }  
 }
 
-module.exports = Fetcher
+module.exports = DataSource

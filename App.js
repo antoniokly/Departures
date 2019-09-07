@@ -1,16 +1,39 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, SafeAreaView} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, ActivityIndicator} from 'react-native';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import SegmentedControlTab from "react-native-segmented-control-tab";
 import { Button } from 'react-native-elements';
+import MapView from 'react-native-maps';
+import Modal from "react-native-modal";
+import Cache from './model/cache';
+import DataSource from './model/dataSource';
 
-
+const {transportationURL, transportationAPIKey, defaultTtl} = require('./model/constants');
 const moment = require('moment');
+const fetch = require('node-fetch');
+const cache = new Cache(defaultTtl);
+const dataSource = new DataSource(transportationURL, transportationAPIKey, cache, fetch);
+
+
+async function getData(filters, callback) {
+  try {
+    const data = await dataSource.getData(filters);
+    callback(data);
+  } catch (err) {
+    callback(null, err);
+  }
+}
+
+function getDisplayTime(date) {
+  return  moment(date).format('Do MMM YYYY, h:mm a');
+}
 
 export default class App extends Component {
   state = {
     type: -1,
     isDateTimePickerVisible: false,
+    modalVisible: false,
+    isLoading: false
   };
 
   handleIndexChange = index => {
@@ -42,13 +65,58 @@ export default class App extends Component {
   };
 
   search = () => {
-    console.log(this.state);
-    alert(JSON.stringify(this.state));
+    this.state.loading = true;
+    var filters = {};
+
+    if (this.state.type >= 0) {
+      filters.typeId = this.state.type;
+    }
+
+    if (this.state.fromDate) {
+      filters.departureTimeMin = this.state.fromDate;
+    }
+
+    if (this.state.toDate) {
+      filters.departureTimeMax = this.state.toDate;
+    }
+
+    var app = this;
+
+    getData(filters, function(data, err) {
+      app.setState({isLoading: true})
+      if (data) {
+        console.log(data);
+
+        const markers = data.transportation.modes.map(function(item) {
+          return {
+            latitude: item.latitude,
+            longitude: item.longitude,
+            title: item.name,
+            subtitle: item.departureTime
+          }
+        });
+        
+        
+        app.setState({
+          modalVisible: true,
+          isLoading: false,
+          markers: markers
+        });
+        // alert(JSON.stringify(markers));
+
+      } else {
+        app.setState({isLoading: false})
+
+        alert(err);
+      }
+
+    });    
   };
+
 
   toDateString = () => {
     if (this.state.toDate) {
-      return moment(this.state.toDate).format('Do MMM YYYY, h:mm a');
+      return getDisplayTime(this.state.toDate);
     }
 
     return "Any"
@@ -56,7 +124,7 @@ export default class App extends Component {
 
   fromDateString = () => {
     if (this.state.fromDate) {
-      return moment(this.state.fromDate).format('Do MMM YYYY, h:mm a');
+      return getDisplayTime(this.state.fromDate);
     }
 
     return "Any"
@@ -121,18 +189,22 @@ export default class App extends Component {
           </View>
         </View>
 
-        <View style={styles.bottom}>
-          <Button
-              icon={{
-                name: "search",
-                size: 20,
-                color: "gray"
-              }}  
-              type="outline"
-              title="Search" 
-              onPress={this.search} 
-              titleStyle={{fontSize: 16}}
-            />
+        <View style={styles.itemContainer}>
+
+          <View style={styles.bottom}>
+            <Button
+                icon={{
+                  name: "search",
+                  size: 20,
+                  color: "gray"
+                }}  
+                type="outline"
+                title="Search" 
+                loading={this.state.isLoading}
+                onPress={this.search} 
+                titleStyle={{fontSize: 16}}
+              />
+          </View>
         </View>
 
         <DateTimePicker
@@ -141,6 +213,23 @@ export default class App extends Component {
               onCancel={this.hideDateTimePicker}
               mode="datetime"
         />
+
+        <Modal
+          style={{ flex: 1, marginTop: 90,  marginHorizontal: 0 , marginBottom: 0}}
+          visible={this.state.modalVisible}
+          onBackdropPress={() => this.setState({ modalVisible: false })}
+          >
+            <View style={{ flex: 1 }}>
+              <MapView 
+                style={{height: '100%', width: "100%"}}
+                annotations={this.state.markers}
+                >
+
+               
+              </MapView>
+            </View>
+            
+        </Modal>
         
       </SafeAreaView>
     );
@@ -151,9 +240,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F5FCF1',
     flexDirection: 'column',
-    padding: 20,
+    padding: 0,
     width: '100%'
   },
   itemContainer: {
@@ -186,7 +275,7 @@ const styles = StyleSheet.create({
   appHeader: {
     alignItems: 'center',
     width: '100%',
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.2,
     padding: 10
   },
   title: {
@@ -212,7 +301,7 @@ const styles = StyleSheet.create({
     marginBottom: 36
   },
   tabStyle: {
-    backgroundColor: "#F5FCFF"
+    backgroundColor: "#F5FCF1"
   },
   buttonTextStyle: {
     fontSize: 16
