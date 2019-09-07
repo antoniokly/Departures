@@ -28,8 +28,12 @@ function getDisplayTime(date) {
   return  moment(date).format('Do MMM YYYY, h:mm a');
 }
 
-function getDisplayType(id) {
-  return ["Train", "Bus"][id];
+function getDisplayType(item) {
+  var text = ["Train", "Bus"][item.typeId];
+  if (item.route) {
+    text += ` ${item.route}`
+  }
+  return text;
 } 
 
 export default class App extends Component {
@@ -98,6 +102,7 @@ export default class App extends Component {
         });
         // alert(JSON.stringify(markers));
 
+        app.fitAllMarkers();
       } else {
 
         alert(err);
@@ -107,22 +112,28 @@ export default class App extends Component {
   };
 
   markers = () => {
-    // const todos = ['finish doc', 'submit pr', 'nag dan to review'];
-    // return (
-    //   <ul>
-    //     {todos.map((message) => <Item key={message} message={message} />)}
-    //   </ul>
-    // );
     const modes = this.state.modes;
     return (
       modes.map((item) => 
-        <MapView.Marker
+        <MapView.Marker.Animated
           coordinate={{latitude: item.latitude,
           longitude: item.longitude}}
-          title={`${item.name} (${getDisplayType(item.typeId)})`}
+          title={`${item.name} (${getDisplayType(item)})`}
           description={getDisplayTime(item.departureTime)}
         />)
     )
+  }
+
+  fitAllMarkers() {
+    this.mapView.fitToCoordinates(this.state.modes, {
+      edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
+      animated: true,
+    });
+  }
+
+  fitToMarkersToMap() {
+    const {members} = this.state;
+    this.map.fitToSuppliedMarkers(members.map(m => m.id), true);
   }
 
   toDateString = () => {
@@ -232,6 +243,7 @@ export default class App extends Component {
           >
             <View style={{ flex: 1 }}>
               <MapView 
+                ref={c => this.mapView = c}
                 style={{height: '100%', width: "100%"}}
                 >
                 {
