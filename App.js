@@ -28,12 +28,17 @@ function getDisplayTime(date) {
   return  moment(date).format('Do MMM YYYY, h:mm a');
 }
 
+function getDisplayType(id) {
+  return ["Train", "Bus"][id];
+} 
+
 export default class App extends Component {
   state = {
     type: -1,
     isDateTimePickerVisible: false,
     modalVisible: false,
-    isLoading: false
+    isLoading: false,
+    modes: []
   };
 
   handleIndexChange = index => {
@@ -65,7 +70,7 @@ export default class App extends Component {
   };
 
   search = () => {
-    this.state.loading = true;
+    this.setState({isLoading: true})
     var filters = {};
 
     if (this.state.type >= 0) {
@@ -83,29 +88,17 @@ export default class App extends Component {
     var app = this;
 
     getData(filters, function(data, err) {
-      app.setState({isLoading: true})
+      app.setState({isLoading: false})
       if (data) {
         console.log(data);
-
-        const markers = data.transportation.modes.map(function(item) {
-          return {
-            latitude: item.latitude,
-            longitude: item.longitude,
-            title: item.name,
-            subtitle: item.departureTime
-          }
-        });
-        
-        
+                
         app.setState({
           modalVisible: true,
-          isLoading: false,
-          markers: markers
+          modes: data.transportation.modes
         });
         // alert(JSON.stringify(markers));
 
       } else {
-        app.setState({isLoading: false})
 
         alert(err);
       }
@@ -113,6 +106,24 @@ export default class App extends Component {
     });    
   };
 
+  markers = () => {
+    // const todos = ['finish doc', 'submit pr', 'nag dan to review'];
+    // return (
+    //   <ul>
+    //     {todos.map((message) => <Item key={message} message={message} />)}
+    //   </ul>
+    // );
+    const modes = this.state.modes;
+    return (
+      modes.map((item) => 
+        <MapView.Marker
+          coordinate={{latitude: item.latitude,
+          longitude: item.longitude}}
+          title={`${item.name} (${getDisplayType(item.typeId)})`}
+          description={getDisplayTime(item.departureTime)}
+        />)
+    )
+  }
 
   toDateString = () => {
     if (this.state.toDate) {
@@ -222,11 +233,13 @@ export default class App extends Component {
             <View style={{ flex: 1 }}>
               <MapView 
                 style={{height: '100%', width: "100%"}}
-                annotations={this.state.markers}
                 >
-
+                {
+                  this.markers()
+                }
                
               </MapView>
+              
             </View>
             
         </Modal>
