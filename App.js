@@ -15,7 +15,19 @@ const {filterModes} = require('./model/filter')
 const cache = new Cache(defaultTtl);
 const dataSource = new DataSource(transportationURL, transportationAPIKey, cache, fetch);
 
+
+
 async function getModes(filters, callback) {
+  if (__DEV__) {
+    const Timeout = require( 'await-timeout');
+    const {transportationResponse} = require('./model/mockData')
+
+    dataSource.getData = async function() {
+      await Timeout.set(2000);
+      return transportationResponse.result;
+    }
+  }
+
   try {
     const data = await dataSource.getData(filters);
     const modes = data.transportation.modes

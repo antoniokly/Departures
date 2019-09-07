@@ -12,6 +12,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "await-timeout": "^0.6.0",
     "expo": "^34.0.1",
     "isomorphic-fetch": "^2.2.1",
     "jest": "24.1.0",
