@@ -22,7 +22,7 @@ const filterables = {
         return itemTime <= filterTime;
     },
 
-    //Extras
+    //Extras for expansion
     route: (item, value) => {
         if (!item.route || !value) {
             return false;
@@ -45,12 +45,12 @@ function filterModes(modes, filters) {
     }
 
     return filtered = modes.filter( item =>  {
-        for (var filter in filters) {
-            if (!filterables[filter]) {
+        for (var key in filters) {
+            if (!filterables[key]) {
                 return false;
             }
             
-            if (!filterables[filter](item, filters[filter])) {
+            if (!filterables[key](item, filters[key])) {
                 return false;
             }
         }

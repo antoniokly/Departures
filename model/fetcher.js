@@ -1,10 +1,16 @@
 import "isomorphic-fetch";
-import {transportationURL, apiKey, ttl} from './constants.js'
-import filter from "./filter"
+const {transportationURL, apiKey} = require('./constants');
+const {getCacheData, setCacheData, resetCache} = require('./cache');
 
-var cacheFilters, cacheData;
 
 async function fetcher(filters) {
+
+  var cacheData = getCacheData(filters);
+ 
+  if (cacheData) {
+    return cacheData;
+  }
+
   try {
     const response = await fetch(transportationURL, {
       method: 'GET',
@@ -17,8 +23,7 @@ async function fetcher(filters) {
     
     if (json.statusCode === 200) {
       if (json.result && json.result.transportation && json.result.transportation.modes) {
-        cacheData = json.result.transportation.modes;;
-        cacheFilters = filters;
+        cacheData = setCacheData(json.result.transportation.modes, filters);
         return cacheData;
       }
     } 

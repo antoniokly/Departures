@@ -1,4 +1,4 @@
-const fetcher = require('../fetcher');
+const fetcher = require('../model/fetcher');
 
 describe("Smoke test", () => {
 
