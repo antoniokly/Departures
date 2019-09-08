@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, SafeAreaView, ActivityIndicator} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView} from 'react-native';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import SegmentedControlTab from "react-native-segmented-control-tab";
 import { Button } from 'react-native-elements';
@@ -23,15 +23,25 @@ async function getModes(filters, callback) {
     const {transportationResponse} = require('./model/mockData')
 
     dataSource.getData = async function() {
-      await Timeout.set(2000);
+      await Timeout.set(1000);
       return transportationResponse.result;
     }
   }
 
   try {
     const data = await dataSource.getData(filters);
-    const modes = data.transportation.modes
-    callback(filterModes(modes, filters));
+
+    if (!data.transportation || !data.transportation.modes) {
+      throw "Something went wrong!\nPlease try again later.";
+    }
+    
+    const modes = filterModes(data.transportation.modes, filters)
+
+    if (!modes.length) {
+      throw "No result found!\nPlease adjust the filters.";
+    }
+
+    callback(modes);
   } catch (err) {
     callback(null, err);
   }
@@ -114,14 +124,12 @@ export default class App extends Component {
           modes: modes
         });
         // alert(JSON.stringify(markers));
-
-        
+       
         setTimeout(function(){
           app.fitAllMarkers();
 
         }
         , 1000)
-
       } else {
 
         alert(err);
@@ -170,7 +178,7 @@ export default class App extends Component {
   render() {
 
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.appHeader}>
           <Text style={styles.title}>Departures</Text>
         </View>
@@ -272,7 +280,7 @@ export default class App extends Component {
             
         </Modal>
         
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -315,9 +323,10 @@ const styles = StyleSheet.create({
   },
   appHeader: {
     alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
-    borderBottomWidth: 0.2,
-    padding: 10,
+    // borderBottomWidth: 0.2,
+    padding: 0,
     marginTop: 40
   },
   title: {
@@ -340,7 +349,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '40%',
     justifyContent: 'flex-end',
-    marginBottom: 36
+    marginBottom: 60
   },
   tabStyle: {
     backgroundColor: "#F5FCF1"
