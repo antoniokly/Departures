@@ -96,6 +96,16 @@ export default class App extends Component {
     this.hideDateTimePicker();
   };
 
+  reset = () => {
+    cache.resetCache();
+    this.setState({
+      type: -1,
+      fromDate: null,
+      toDate: null,
+      modes: []
+    })
+  }
+
   search = () => {
     this.setState({isLoading: true})
     var filters = {};
@@ -192,6 +202,7 @@ export default class App extends Component {
               values={["Any", "Train", "Bus"]}
               selectedIndex={this.state.type + 1}
               onTabPress={this.handleIndexChange}
+              enabled={!this.state.isLoading}
             />
           </View>
         </View>
@@ -207,7 +218,8 @@ export default class App extends Component {
                 color: "gray"
               }}
               type="outline"
-              title="Change" 
+              title="Change"
+              disabled={this.state.isLoading}
               onPress={this.showFromDateTimePicker} 
               titleStyle={styles.buttonTextStyle}
 
@@ -226,7 +238,8 @@ export default class App extends Component {
                 color: "gray"
               }}            
               type="outline"
-              title="Change" 
+              title="Change"
+              disabled={this.state.isLoading}
               onPress={this.showToDateTimePicker} 
               titleStyle={styles.buttonTextStyle}
             />
@@ -234,7 +247,24 @@ export default class App extends Component {
         </View>
 
         <View style={styles.itemContainer}>
+          <View style={styles.reset}>
+            <Button
+                icon={{
+                  name: "clear",
+                  size: 20,
+                  color: "red"
+                }}  
+                type="outline"
+                title="Reset"
+                disabled={this.state.isLoading}
+                onPress={this.reset}
+                titleStyle={{fontSize: 16, color: 'red'}}
+                buttonStyle={{borderColor: 'red'}}
+              />
+          </View>
+        </View>
 
+        <View style={styles.itemContainer}>
           <View style={styles.bottom}>
             <Button
                 icon={{
@@ -243,7 +273,7 @@ export default class App extends Component {
                   color: "gray"
                 }}  
                 type="outline"
-                title="Search" 
+                title="Search"
                 loading={this.state.isLoading}
                 onPress={this.search} 
                 titleStyle={{fontSize: 16}}
@@ -345,6 +375,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 36,
+  },
+  reset: {
+    flex: 1,
+    width: '40%',
+    justifyContent: 'flex-end',
+    marginBottom: 10
   },
   bottom: {
     flex: 1,
