@@ -22,19 +22,17 @@ const filterables = {
         return itemTime <= filterTime;
     },
 
-    //Extras for expansion
-    route: (item, value) => {
+    //Future expansion
+    routeContains: (item, value) => {
         if (!item.route || !value) {
             return false;
         }
-        // console.log(item.route, value, item.route.includes(value))
         return item.route.includes(value); 
     },
-    name: (item, value) => {
+    nameStartsWith: (item, value) => {
         if (!item.route || !value) {
             return false;
         }
-        // console.log(item.name, value, item.name.startsWith(value))
         return item.name.toLowerCase().startsWith(value.toLowerCase());
     }
 };

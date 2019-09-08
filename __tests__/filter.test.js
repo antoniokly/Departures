@@ -55,7 +55,7 @@ describe("Filter by departureTime", () => {
 
 describe("Filter by route", () => {
     test("it should return only 1 match", () => {
-        const result = filterModes(modes, {route: "820"});
+        const result = filterModes(modes, {routeContains: "820"});
   
         expect(result.length).toBe(1);
 
@@ -67,7 +67,7 @@ describe("Filter by route", () => {
 
 describe("Filter by name", () => {
     test("it should filter name caseinsensitive", () => {
-        const result = filterModes(modes, {name: "c"});
+        const result = filterModes(modes, {nameStartsWith: "c"});
   
         expect(result.length).toBe(2);
 
@@ -79,7 +79,7 @@ describe("Filter by name", () => {
 
 describe("Filter multiple fieids", () => {
     test("it should return only 1 match", () => {
-        const result = filterModes(modes, {typeId: 1, route: "820"});
+        const result = filterModes(modes, {typeId: 1, routeContains: "820"});
   
         expect(result.length).toBe(1);
 
