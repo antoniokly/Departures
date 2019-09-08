@@ -115,7 +115,13 @@ export default class App extends Component {
         });
         // alert(JSON.stringify(markers));
 
-        app.fitAllMarkers();
+        
+        setTimeout(function(){
+          app.fitAllMarkers();
+
+        }
+        , 1000)
+
       } else {
 
         alert(err);
@@ -138,22 +144,11 @@ export default class App extends Component {
     )
   }
 
-  fitAllMarkers() {
+  fitAllMarkers(padding = 50) {
     this.mapView.fitToCoordinates(this.state.modes, {
-      edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
+      edgePadding: { top: padding, right: padding, bottom: padding, left: padding },
       animated: true,
     });
-  }
-
-  fitToMarkersToMap() {
-    const app = this;
-
-    setTimeout(() => {
-      const {members} = app.state;
-    
-      app.map.fitToSuppliedMarkers(members.map(m => m.id), true);
-    }, 1000);
-    
   }
 
   toDateString = () => {
@@ -175,7 +170,7 @@ export default class App extends Component {
   render() {
 
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.appHeader}>
           <Text style={styles.title}>Departures</Text>
         </View>
@@ -265,6 +260,7 @@ export default class App extends Component {
               <MapView 
                 ref={c => this.mapView = c}
                 style={{height: '100%', width: "100%"}}
+                
                 >
                 {
                   this.markers()
@@ -276,7 +272,7 @@ export default class App extends Component {
             
         </Modal>
         
-      </SafeAreaView>
+      </View>
     );
   }
 }
