@@ -8,18 +8,27 @@
 
 ## Installation
 
+Install Expo CLI
+https://docs.expo.io/versions/v34.0.0/introduction/installation/
+
+```bash
+npm install expo-cli --global
+```
+
 ```bash
 npm install
 ```
 
 ## Testing
+The data fetching, caching and filtering logic is unit tested. To run the test, do:
 
 ```bash
 npm run test
 ```
 
+## Run with Expo (Recommeneded)
 
-## Usage
+Start Android/iOS Simulators from Android Stuido/Xcode then run the following commands:
 
 ```bash
 npm run android
@@ -28,6 +37,23 @@ npm run android
 ```bash
 npm run ios
 ```
+
+## Run with Android Studio/Xcode and Distribution
+
+Eject to ExpoKit to create Android and Xcode project files:
+https://docs.expo.io/versions/latest/expokit/eject/
+
+```bash
+expo eject
+```
+
+### Google Play Distribution
+https://developer.android.com/google/play/dist
+
+### App Store Distribution
+https://developer.apple.com/business/distribute/
+
+
 ## Known Issues
 
 <img src="screenshots/ios/error.png" width="250">
