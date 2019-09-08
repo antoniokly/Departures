@@ -1,5 +1,6 @@
 const {filterModes} = require('../model/filter');
-const {transportationResponse, modes} = require('../model/mockData')
+const {transportationResponse} = require('../model/mockData');
+const modes = transportationResponse.result.transportation.modes;
 
 describe("Null filter", () => {    
   test("it should return the original", () => {
