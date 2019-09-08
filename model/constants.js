@@ -6,5 +6,6 @@ const useMockDataForDebug = false;
 export {
     transportationURL,
     transportationAPIKey,
-    defaultTtl
+    defaultTtl,
+    useMockDataForDebug
 }

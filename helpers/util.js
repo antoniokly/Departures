@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 module.exports = {
     getDisplayTime: function (date) {
         return  moment(date).format('Do MMM YYYY, h:mm a');

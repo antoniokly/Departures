@@ -9,7 +9,6 @@ import Cache from './model/cache';
 import DataSource from './model/dataSource';
 import {getDisplayTime, getDisplayType} from './helpers/util'
 
-const moment = require('moment');
 const fetch = require('node-fetch');
 const {transportationURL, transportationAPIKey, defaultTtl, useMockDataForDebug} = require('./model/constants');
 const {filterModes} = require('./model/filter')
