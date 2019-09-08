@@ -7,10 +7,11 @@ import MapView from 'react-native-maps';
 import Modal from "react-native-modal";
 import Cache from './model/cache';
 import DataSource from './model/dataSource';
+import {getDisplayTime, getDisplayType} from './helpers/util'
 
 const moment = require('moment');
 const fetch = require('node-fetch');
-const {transportationURL, transportationAPIKey, defaultTtl} = require('./model/constants');
+const {transportationURL, transportationAPIKey, defaultTtl, useMockDataForDebug} = require('./model/constants');
 const {filterModes} = require('./model/filter')
 const cache = new Cache(defaultTtl);
 const dataSource = new DataSource(transportationURL, transportationAPIKey, cache, fetch);
@@ -18,7 +19,7 @@ const dataSource = new DataSource(transportationURL, transportationAPIKey, cache
 
 
 async function getModes(filters, callback) {
-  if (__DEV__) {
+  if (__DEV__ && useMockDataForDebug) {
     const Timeout = require( 'await-timeout');
     const {transportationResponse} = require('./model/mockData')
 
@@ -46,18 +47,6 @@ async function getModes(filters, callback) {
     callback(null, err);
   }
 }
-
-function getDisplayTime(date) {
-  return  moment(date).format('Do MMM YYYY, h:mm a');
-}
-
-function getDisplayType(item) {
-  var text = ["Train", "Bus"][item.typeId];
-  if (item.route) {
-    text += ` ${item.route}`
-  }
-  return text;
-} 
 
 export default class App extends Component {
   state = {
