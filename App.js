@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, SafeAreaView} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Alert} from 'react-native';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import SegmentedControlTab from "react-native-segmented-control-tab";
 import { Button } from 'react-native-elements';
@@ -32,13 +32,13 @@ async function getModes(filters, callback) {
     const data = await dataSource.getData(filters);
 
     if (!data.transportation || !data.transportation.modes) {
-      throw "Something went wrong!\nPlease try again later.";
+      throw {name: "Something went wrong!", message: "Please try again later."} ;
     }
     
     const modes = filterModes(data.transportation.modes, filters)
 
     if (!modes.length) {
-      throw "No result found!\nPlease adjust the filters.";
+      throw {name: "No result found!", message: "Please adjust the filters."} ;
     }
 
     callback(modes);
@@ -127,12 +127,11 @@ export default class App extends Component {
        
         setTimeout(function(){
           app.fitAllMarkers();
-
         }
         , 1000)
       } else {
 
-        alert(err);
+        Alert.alert(err.name, err.message);
       }
 
     });    
@@ -260,6 +259,8 @@ export default class App extends Component {
         />
 
         <Modal
+          animationInTiming={500}
+          animationOutTiming={500}
           style={{ flex: 1, marginTop: 90,  marginHorizontal: 0 , marginBottom: 0}}
           visible={this.state.modalVisible}
           onBackdropPress={() => this.setState({ modalVisible: false })}

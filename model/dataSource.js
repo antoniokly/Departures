@@ -26,35 +26,27 @@ DataSource.prototype.getData = async function(filters) {
     urlString += Object.keys(filters).map(key => `${key}=${filters[key]}`).join('&');
   }
 
-  console.log(encodeURI(urlString));
-
-  try {
     
-    const response = await this.fetch(encodeURI(urlString), {
-      method: 'GET',
-      headers: {
-        'x-api-key': this.apiKey
-      }
-    });
+  const response = await this.fetch(encodeURI(urlString), {
+    method: 'GET',
+    headers: {
+      'x-api-key': this.apiKey
+    }
+  });
+
+  let json = await response.json();
   
-    let json = await response.json();
-    
-    if (json.statusCode === 200) {
-      const data = json.result
-      if (data) {
-        if (this.cache.setCacheData(data, filters)) {
-          return data;
-        }
+  if (json.statusCode === 200) {
+    const data = json.result
+    if (data) {
+      if (this.cache.setCacheData(data, filters)) {
+        return data;
       }
-    } 
+    }
+  } 
 
-    return null;
-
-  } catch (err) {
-    console.log(err);
-    throw err;
-    //TODO: error handling
-  }  
+  throw { name: "Network Error", message: json.message }
+  
 }
 
 module.exports = DataSource
