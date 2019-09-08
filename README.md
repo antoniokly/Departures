@@ -28,7 +28,14 @@ npm run android
 ```bash
 npm run ios
 ```
+## Known Issues
 
+<img src="screenshots/ios/error.png" width="250">
+
+If you experience network error like this, try using mock data by setting 'useMockDataForDebug' to true in constants.js
+```javascript
+const useMockDataForDebug = true;
+```
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
