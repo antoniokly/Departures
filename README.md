@@ -35,6 +35,20 @@ nameStartsWith: (item, value) => {
     }
     return item.name.toLowerCase().startsWith(value.toLowerCase());
 }
+withinRadius: (item, radius, lat, long) => {
+    // your implementation
+    // return true or false
+}
+```
+So one can do a query with more filters: 
+
+```javascript
+var data = dataSource.getData({
+    typeId: 1,
+    departureTimeMin: "2019-07-08T14:55:00.000Z",
+    nameStartsWith: "A",
+    routeContains: "8"
+});
 ```
 
 ## Installation
