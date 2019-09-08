@@ -89,3 +89,39 @@ describe("Filter multiple fieids", () => {
           });
     });
 });
+
+describe("Filter by expressOnly", () => {
+    test("it should return 4 matches express only", () => {
+        const result = filterModes(modes, {expressOnly: true});
+  
+        expect(result.length).toBe(4);
+
+        result.forEach(item => {
+            expect(item.isExpress).toBeTruthy;
+        });
+    });
+
+    test("it should return all if not expressOnly", () => {
+        const result = filterModes(modes, {expressOnly: false});
+  
+        expect(result.length).toBe(13);
+    });
+});
+
+describe("Filter by topUpOnly", () => {
+    test("it should return 4 matches has topUp only", () => {
+        const result = filterModes(modes, {topUpOnly: true});
+  
+        expect(result.length).toBe(4);
+
+        result.forEach(item => {
+            expect(item.hasMyKiTopUp).toBeTruthy;
+        });
+    });
+
+    test("it should return all if not topUpOnly", () => {
+        const result = filterModes(modes, {topUpOnly: false});
+  
+        expect(result.length).toBe(13);
+    });
+});

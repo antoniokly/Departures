@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Alert} from 'react-native';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import SegmentedControlTab from "react-native-segmented-control-tab";
-import { Button } from 'react-native-elements';
+import { Button, CheckBox } from 'react-native-elements';
 import MapView from 'react-native-maps';
 import Modal from "react-native-modal";
 import Cache from './model/cache';
@@ -90,7 +90,9 @@ export default class App extends Component {
       type: -1,
       fromDate: null,
       toDate: null,
-      modes: []
+      modes: [],
+      topUpOnly: null,
+      expressOnly: null
     })
   }
 
@@ -108,6 +110,14 @@ export default class App extends Component {
 
     if (this.state.toDate) {
       filters.departureTimeMax = this.state.toDate;
+    }
+
+    if (this.state.expressOnly) {
+      filters.expressOnly = this.state.expressOnly;
+    }
+
+    if (this.state.topUpOnly) {
+      filters.topUpOnly = this.state.topUpOnly;
     }
 
     var app = this;
@@ -193,6 +203,25 @@ export default class App extends Component {
               enabled={!this.state.isLoading}
             />
           </View>
+        </View>
+
+        <View style={styles.checkBoxContainer}
+          pointerEvents={this.state.isLoading ? 'none' : 'auto'}
+        >
+          <CheckBox
+            center
+            containerStyle={styles.checkBox}
+            title='Express Only'
+            checked={this.state.expressOnly}
+            onPress={() => this.setState({expressOnly: !this.state.expressOnly})}
+          />
+          <CheckBox
+            center
+            containerStyle={styles.checkBox}
+            title='MiKi TopUp Only'
+            checked={this.state.topUpOnly}
+            onPress={() => this.setState({topUpOnly: !this.state.topUpOnly})}
+          />
         </View>
 
         <View style={styles.itemContainer}>
@@ -357,6 +386,19 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     width: '40%',
+  },
+  checkBox: {
+    padding: 0,
+    margin:0,
+    backgroundColor: "#F5FCF1",
+    borderColor: "#F5FCF1",
+  },
+  checkBoxContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: '100%',
   },
   top: {
     flex: 1,

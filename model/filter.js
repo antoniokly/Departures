@@ -21,6 +21,18 @@ const filterables = {
         // console.log(itemTime, filterTime, itemTime <= filterTime)
         return itemTime <= filterTime;
     },
+    topUpOnly: (item, value) => {
+        if (!value) {
+            return true;
+        }
+        return item.hasMyKiTopUp; 
+    },
+    expressOnly: (item, value) => {
+        if (!value) {
+            return true;
+        }
+        return item.isExpress; 
+    },
 
     //Future expansion
     routeContains: (item, value) => {
