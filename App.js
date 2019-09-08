@@ -129,6 +129,7 @@ export default class App extends Component {
     return (
       modes.map((item) => 
         <MapView.Marker.Animated
+          key={`${modes.indexOf(item)}`}
           coordinate={{latitude: item.latitude,
           longitude: item.longitude}}
           title={`${item.name} (${getDisplayType(item)})`}
@@ -145,8 +146,14 @@ export default class App extends Component {
   }
 
   fitToMarkersToMap() {
-    const {members} = this.state;
-    this.map.fitToSuppliedMarkers(members.map(m => m.id), true);
+    const app = this;
+
+    setTimeout(() => {
+      const {members} = app.state;
+    
+      app.map.fitToSuppliedMarkers(members.map(m => m.id), true);
+    }, 1000);
+    
   }
 
   toDateString = () => {
@@ -314,7 +321,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     borderBottomWidth: 0.2,
-    padding: 10
+    padding: 10,
+    marginTop: 40
   },
   title: {
     fontSize: 22,
