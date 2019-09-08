@@ -51,7 +51,7 @@ npm install
 For details: https://docs.expo.io/versions/v34.0.0/introduction/installation/
 
 ## Testing
-The data fetching, caching and filtering logic is unit tested. To run the test, do:
+The data fetching, caching and filtering logic are unit tested. Please make sure you run the tests before and after any modifications:
 
 ```bash
 npm run test
