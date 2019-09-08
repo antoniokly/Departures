@@ -1,7 +1,7 @@
 # Departures
 
 ## Introduction
-Departures is a travel planning mobile app that allows users to search for public transport service departures with fitering features. The app is developed by React Native cross-platform framework. For details, visit https://facebook.github.io/react-native/
+Departures is a travel planning mobile app that allows users to search for public transport service departures with fitering features. This app is developed by React Native cross-platform framework. For details, visit https://facebook.github.io/react-native/
 
 
 ## Screenshots
@@ -20,21 +20,19 @@ const defaultTtl = 60000;
 const useMockDataForDebug = false;
 ```
 
-- Filtering logic can be easily expanded, by implementing more filter methods in `filter.js`, e.g.
+- Filtering logic can be expanded by implementing more filtering methods in `filter.js`, e.g.
 ```javascript
 //Future expansion
 routeContains: (item, value) => {
     if (!item.route || !value) {
         return false;
     }
-    // console.log(item.route, value, item.route.includes(value))
     return item.route.includes(value); 
 },
 nameStartsWith: (item, value) => {
     if (!item.route || !value) {
         return false;
     }
-    // console.log(item.name, value, item.name.startsWith(value))
     return item.name.toLowerCase().startsWith(value.toLowerCase());
 }
 ```
