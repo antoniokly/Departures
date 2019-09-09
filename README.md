@@ -1,4 +1,5 @@
-# Departures
+# Departures 
+<img src="assets/icon.png" width="150">
 
 ## Introduction
 Departures is a travel planning mobile app that allows users to search for public transport service departures with fitering features. This app is developed by React Native cross-platform framework. For details, visit https://facebook.github.io/react-native/
@@ -34,8 +35,8 @@ nameStartsWith: (item, value) => {
         return false;
     }
     return item.name.toLowerCase().startsWith(value.toLowerCase());
-}
-withinRadius: (item, radius, lat, long) => {
+},
+withinRadius: (item, radius) => {
     // your implementation
     // return true or false
 }
@@ -103,7 +104,7 @@ https://developer.apple.com/business/distribute/
 
 <img src="screenshots/ios/error.png" width="250">
 
-If you experience network error like this, try using mock data by setting 'useMockDataForDebug' to true in `constants.js`
+If you experience network error like this, try using mock data by enabling `useMockDataForDebug` in `constants.js`
 ```javascript
 const useMockDataForDebug = true;
 ```
