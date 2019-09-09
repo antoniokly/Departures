@@ -1,10 +1,10 @@
 import DataSource from '../model/dataSource'
 import Cache from '../model/cache'
 
-const {transportationURL, transportationAPIKey, defaultTtl} = require('../model/constants');
+const {transportationURL, transportationAPIKey, defaultTtl, transportationAPIFilters} = require('../model/constants');
 const fetch = require('node-fetch');
 const cache = new Cache(defaultTtl);
-const dataSource = new DataSource(transportationURL, transportationAPIKey, cache, fetch)
+const dataSource = new DataSource(transportationURL, transportationAPIKey, transportationAPIFilters, cache, fetch)
 
 describe("Smoke test", () => {
 

@@ -10,10 +10,10 @@ import DataSource from './model/dataSource';
 import {getDisplayTime, getDisplayType} from './helpers/util'
 
 const fetch = require('node-fetch');
-const {transportationURL, transportationAPIKey, defaultTtl, useMockDataForDebug} = require('./model/constants');
+const {transportationURL, transportationAPIKey, defaultTtl, useMockDataForDebug, transportationAPIFilters} = require('./model/constants');
 const {filterModes} = require('./model/filter')
 const cache = new Cache(defaultTtl);
-const dataSource = new DataSource(transportationURL, transportationAPIKey, cache, fetch);
+const dataSource = new DataSource(transportationURL, transportationAPIKey, transportationAPIFilters, cache, fetch);
 
 
 

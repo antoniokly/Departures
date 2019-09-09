@@ -1,7 +1,8 @@
 class DataSource {
-  constructor(url, apiKey, cache, fetch) {
+  constructor(url, apiKey, apiAllowedFiltes, cache, fetch) {
       this.url = url;
       this.apiKey = apiKey;
+      this.apiAllowedFiltes = apiAllowedFiltes;
       this.cache = cache;
       this.fetch = fetch;
   }
@@ -21,12 +22,22 @@ DataSource.prototype.getData = async function(filters) {
 
   var urlString = this.url;
 
+  var apiFilters = {};
+
   if (filters) {
-    urlString += '?'
-    urlString += Object.keys(filters).map(key => `${key}=${filters[key]}`).join('&');
+    var paramStrings = []
+
+    for (var key in filters) {
+      if (this.apiAllowedFiltes.indexOf(key) > -1) {
+        apiFilters[key] = filters[key];
+        paramStrings.push(`${key}=${filters[key]}`);
+      }
+    }
+    
+    urlString += '?' 
+    urlString += paramStrings.join('&');
   }
 
-    
   const response = await this.fetch(encodeURI(urlString), {
     method: 'GET',
     headers: {
